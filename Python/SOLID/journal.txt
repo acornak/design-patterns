@@ -1,0 +1,2 @@
+1: This is the first entry.
+2: Second day is also boring.
