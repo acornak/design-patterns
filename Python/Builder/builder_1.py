@@ -41,6 +41,7 @@ class HtmlElement:
         """
         String representation
         """
+        print(self.elements)
         return self.__str(0)
 
     @staticmethod
@@ -62,6 +63,7 @@ class HtmlBuilder:
         """
         self.root_name = root_name
         self.__root = HtmlElement(name=root_name)
+        print(self.__root)
 
     def add_child(self, child_name: str, child_text: str):
         """
@@ -76,7 +78,7 @@ class HtmlBuilder:
         self.__root.elements.append(HtmlElement(child_name, child_text))
         return self
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         String representation
         """
@@ -85,12 +87,6 @@ class HtmlBuilder:
 
 if __name__ == "__main__":
     builder = HtmlBuilder("ui")
-    builder.add_child("li", "hello")
-    builder.add_child("li", "world")
-    print("Ordinary builder:")
-    print(builder)
-    print("\nAnother approach\n")
-    builder = HtmlElement.create("ui")
     builder.add_child_fluent("li", "hello").add_child_fluent("li", "world")
     print("Fluent builder:")
     print(builder)
