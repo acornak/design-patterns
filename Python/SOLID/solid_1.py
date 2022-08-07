@@ -11,10 +11,10 @@ class Journal:
 
     def __init__(self) -> None:
         """
-        Initialize
+        Constructor
         """
-        self.entries = []
-        self.count = 0
+        self.entries: list = []
+        self.count: int = 0
 
     def add_entry(self, text: str) -> None:
         """
@@ -32,7 +32,7 @@ class Journal:
 
     def __str__(self) -> str:
         """
-        Override print method
+        String representation
         """
         return "\n".join(self.entries)
 

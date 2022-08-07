@@ -1,3 +1,4 @@
+# type: ignore
 """
 SOLID principles
 3: Liskov Substitution principle
@@ -11,7 +12,7 @@ class Rectangle:
 
     def __init__(self, height: int, width: int) -> None:
         """
-        Initialization
+        Constructor
         """
         self._height = height
         self._width = width
@@ -53,7 +54,7 @@ class Rectangle:
 
     def __str__(self):
         """
-        Override print
+        String representation
         """
         return f"Width: {self.width}, Height: {self.height}, Area: {self.area}"
 
@@ -64,6 +65,9 @@ class Square(Rectangle):
     """
 
     def __init__(self, size: int) -> None:
+        """
+        Constructor
+        """
         Rectangle.__init__(self, size, size)
 
     # This is direct violation of Liskov substitution principle

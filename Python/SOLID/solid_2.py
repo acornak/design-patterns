@@ -30,9 +30,9 @@ class Product:
     Handles productes
     """
 
-    def __init__(self, name: str, color: Color, size: str) -> None:
+    def __init__(self, name: str, color: Color, size: Size) -> None:
         """
-        Initialization
+        Constructor
         """
         self.name = name
         self.color = color
@@ -82,7 +82,7 @@ class Filter:
     Filtering
     """
 
-    def filter(self, items: Product, spec):
+    def filter(self, items: list[Product], spec: Specification):
         """
         Filter
         """
@@ -94,6 +94,9 @@ class ColorSpecification(Specification):
     """
 
     def __init__(self, color: Color) -> None:
+        """
+        Constructor
+        """
         self.color = color
 
     def is_satisfied(self, item: Product):
@@ -106,6 +109,9 @@ class SizeSpecification(Specification):
     """
 
     def __init__(self, size: Size) -> None:
+        """
+        Constructor
+        """
         self.size = size
 
     def is_satisfied(self, item: Product):
@@ -117,7 +123,7 @@ class ProductFilter(Filter):
     Filter as it should be
     """
 
-    def filter(self, items: list[Product], spec) -> Product:
+    def filter(self, items: list[Product], spec: Specification):
         """
         Override filter
         """
@@ -133,7 +139,7 @@ class AndSpecification(Specification):
 
     def __init__(self, *args) -> None:
         """
-        Initialization
+        Constructor
         """
         self.args = args
 

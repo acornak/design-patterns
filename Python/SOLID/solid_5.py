@@ -4,6 +4,7 @@ SOLID principles
 """
 from abc import abstractmethod
 from enum import Enum
+from typing import Generator
 
 
 class Relationship(Enum):
@@ -23,7 +24,7 @@ class Person:
 
     def __init__(self, name: str) -> None:
         """
-        Initialization
+        Constructor
         """
         self.name = name
 
@@ -34,7 +35,7 @@ class RelationshipBrowser:
     """
 
     @abstractmethod
-    def find_all_children_of(self, name: str) -> None:
+    def find_all_children_of(self, name: str) -> Generator[str, None, None]:
         """
         Find all children based on parent name
         """
@@ -47,10 +48,10 @@ class Relationships(RelationshipBrowser):
 
     def __init__(self) -> None:
         """
-        Initialization
+        Constructor
         """
         # this is issue
-        self.relations = []
+        self.relations: list[tuple] = []
 
     def add_parent_and_child(self, parent: Person, child: Person) -> None:
         """
@@ -59,7 +60,7 @@ class Relationships(RelationshipBrowser):
         self.relations.append((parent, Relationship.PARENT, child))
         self.relations.append((child, Relationship.CHILD, parent))
 
-    def find_all_children_of(self, name: str) -> None:
+    def find_all_children_of(self, name: str) -> Generator[str, None, None]:
         """
         Implementation
         """
@@ -75,7 +76,7 @@ class Research:
 
     # def __init__(self, relationships: Relationship) -> None:
     #     """
-    #     Initialization
+    #     Constructor
     #     """
     #     relations = relationships.relations
     #     for relation in relations:
@@ -83,6 +84,9 @@ class Research:
     #             print(f"John has a child called {relation[2].name}")
 
     def __init__(self, browser: RelationshipBrowser) -> None:
+        """
+        Constructor
+        """
         for child in browser.find_all_children_of("John"):
             print(f"John has a child called {child}")
 

@@ -87,7 +87,6 @@ class Printer:
         """
         Print method
         """
-        print(document)
 
 
 class Scanner:
@@ -113,6 +112,17 @@ class MyPrinter(Printer):
         """
 
 
+class MyScanner(Scanner):
+    """
+    Printer only
+    """
+
+    def scan(self, document: str) -> None:
+        """
+        Print method
+        """
+
+
 class Photocopier(Printer, Scanner):
     """
     Both printing and scanning
@@ -122,6 +132,7 @@ class Photocopier(Printer, Scanner):
         """
         Print method
         """
+        print(document)
 
     def scan(self, document: str) -> None:
         """
@@ -155,7 +166,7 @@ class MultiFunctionMachine(MultiFunctionDevice):
 
     def __init__(self, printer, scanner) -> None:
         """
-        Initialization
+        Constructor
         """
         self.printer = printer
         self.scanner = scanner
@@ -174,5 +185,5 @@ class MultiFunctionMachine(MultiFunctionDevice):
 
 
 if __name__ == "__main__":
-    device = MultiFunctionMachine(Printer(), Scanner())
+    device = MultiFunctionMachine(MyPrinter(), MyScanner())
     device.print("123")
