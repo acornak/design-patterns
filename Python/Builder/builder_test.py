@@ -14,69 +14,58 @@ class Person:
     self.age = 0
 Please observe the same placement of spaces and indentation.
 """
+import unittest
+import typing
+
+INDENT_SIZE = 2
 
 
-class CodeElement:
+class ClassBuilder:
     """
-    Create element of a code
+    Returns class
     """
 
-    indent_size = 2
-
-    def __init__(
-        self, class_name: str = None, field_type: str = None, field_value: str = None
-    ) -> None:
+    def __init__(self, class_name: str) -> None:
         """
         Constructor
         """
-        self.class_name = class_name
-        self.field_type = field_type
-        self.field_value = field_value
-        self.elements: list = []
-
-    def __compose_code(self) -> str:
-        """
-        Create properly indented element
-        """
-        lines: list[str] = []
-
-        if self.class_name:
-            lines.append(self.__create_class())
-            lines.append(self.__create_init())
-        else:
-            lines.append(self.__create_variables())
-
-        for elem in self.elements:
-            # pylint: disable=W0212
-            lines.append(elem.__compose_code())
-
-        return "\n".join(lines)
-
-    def __create_class(self) -> str:
-        """
-        Return class declaration and constructor
-        """
-        return f"class {self.class_name}:"
-
-    def __create_init(self) -> str:
-        """
-        Assign variables
-        """
-        i = " " * self.indent_size
-        return f"{i}def __init__(self):"
-
-    def __create_variables(self) -> str:
-        """
-        Assign variables
-        """
-        i = " " * self.indent_size * 2
-        return f"{i}self.{self.field_type} = {self.field_value}"
+        self.class_name: str = class_name
+        self.fields: list[FieldBuilder] = []
 
     def __str__(self) -> str:
         """
         String representation
         """
-        return self.__compose_code()
+        lines: list[str] = [f"class {self.class_name}:"]
+        indent: str = " " * INDENT_SIZE
+        if not self.fields:
+            lines.append(f"{indent}pass")
+        else:
+            lines.append(f"{indent}def __init__(self):")
+
+            for field in self.fields:
+                lines.append(f"{indent*2}{field}")
+
+        return "\n".join(lines)
+
+
+class FieldBuilder:
+    """
+    Builds class fields
+    """
+
+    def __init__(self, field_type: str, field_value: typing.Any) -> None:
+        """
+        Constructor
+        """
+        self.field_type: str = field_type
+        self.field_value: typing.Any = field_value
+
+    def __str__(self):
+        """
+        String representation
+        """
+        return f"self.{self.field_type} = {self.field_value}"
 
 
 class CodeBuilder:
@@ -88,27 +77,53 @@ class CodeBuilder:
         """
         Constructor
         """
-        self.class_name = class_name
-        self.__class = CodeElement(class_name)
+        self.__class = ClassBuilder(class_name)
 
     def add_field(self, field_type: str, field_value: str) -> "CodeBuilder":
         """
         Add field
         """
-        self.__class.elements.append(
-            CodeElement(field_type=field_type, field_value=field_value)
-        )
+        self.__class.fields.append(FieldBuilder(field_type, field_value))
         return self
 
     def __str__(self) -> str:
         """
         String representation
         """
-        return str(self.__class)
+        return self.__class.__str__()
+
+
+class TestCodeBuild(unittest.TestCase):
+    """
+    Unit test
+    """
+
+    @staticmethod
+    def preprocess(string: str = "") -> str:
+        """
+        Preprocess string
+        """
+        return string.strip().replace("\r\n", "\n")
+
+    def test_empty(self):
+        """
+        Test empty class
+        """
+        generated_class = CodeBuilder("Foo")
+        self.assertEqual(self.preprocess(str(generated_class)), "class Foo:\n  pass")
+
+    def test_person(self):
+        """
+        Test class with methods
+        """
+        generated_class = (
+            CodeBuilder("Person").add_field("name", '""').add_field("age", 0)
+        )
+        self.assertEqual(
+            self.preprocess(str(generated_class)),
+            """class Foo:\n  def __init__(self):\n    self.name = \"\"\n    self.age = 0""",
+        )
 
 
 if __name__ == "__main__":
-    cb = (
-        CodeBuilder("Person").add_field("zidan", "sufurki").add_field("ja", "nevjeemus")
-    )
-    print(cb)
+    unittest.main()
